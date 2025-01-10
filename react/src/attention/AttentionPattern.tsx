@@ -1,17 +1,17 @@
-import React, { useMemo } from "react";
-import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import {
-  Chart as ChartJS,
   CategoryScale,
-  Tooltip,
-  ScriptableContext,
-  TooltipItem,
   ChartData,
-  LinearScale
+  Chart as ChartJS,
+  LinearScale,
+  ScriptableContext,
+  Tooltip,
+  TooltipItem
 } from "chart.js";
+import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
+import { colord } from "colord";
+import React, { useMemo } from "react";
 import { Chart, ChartProps } from "react-chartjs-2";
 import { Col, Row } from "react-grid-system";
-import { colord } from "colord";
 import { getTokenBackgroundColor } from "../utils/getTokenBackgroundColor";
 
 /**
@@ -63,7 +63,8 @@ export function AttentionPattern({
   showAxisLabels = true,
   zoomed = false,
   maskUpperTri = true,
-  tokens
+  tokens,
+  onTokenClick
 }: AttentionPatternProps) {
   // Tokens must be unique (for the categories), so we add an index prefix
   const uniqueTokens = useMemo(
@@ -163,6 +164,12 @@ export function AttentionPattern({
         ticks: { display: true },
         grid: { display: false },
         display: showAxisLabels
+      }
+    },
+    onClick: (event, elements) => {
+      if (elements.length > 0 && onTokenClick) {
+        const block = chartData[elements[0].index];
+        onTokenClick(block.destIdx);
       }
     }
   };
@@ -304,4 +311,10 @@ export interface AttentionPatternProps {
    * Must be the same length as the list of values.
    */
   tokens: string[];
+
+  /**
+   * Callback when a token is clicked
+   * @param tokenIdx The index of the clicked token
+   */
+  onTokenClick?: (tokenIdx: number) => void;
 }

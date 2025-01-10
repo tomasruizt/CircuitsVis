@@ -1,3 +1,7 @@
+// Import JSON files
+import mockAttnMask from "./mock_attn_mask.json";
+import mockTokensJson from "./mock_tokens.json";
+
 export const mockTokens: string[] = [
   "<|endoftext|>",
   "Help",
@@ -2494,3 +2498,7 @@ export const mockShortAttention: number[][] = [
   [0.12655, 0.41819, 0.01887, 0.03539, 0.36312, 0.29975, 0.55869, 0],
   [0.67655, 0.39603, 0.44996, 0.29455, 0.09027, 0.29609, 0.40371, 0.31282]
 ];
+
+// Export the image tokens and attention from JSON files
+export const mockImageTokens: string[] = mockTokensJson;
+export const mockImageAttention: number[][][] = mockAttnMask;

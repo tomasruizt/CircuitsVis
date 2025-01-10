@@ -2,6 +2,7 @@ import React from "react";
 import { Col, Container, Row } from "react-grid-system";
 import { AttentionPattern } from "./AttentionPattern";
 import { useHoverLock, UseHoverLockState } from "./components/useHoverLock";
+import { ImageAttentionPattern } from "./ImageAttentionPattern";
 
 /**
  * Attention head color
@@ -115,10 +116,14 @@ export function AttentionHeads({
   negativeColor,
   positiveColor,
   maskUpperTri = true,
-  tokens
+  tokens,
+  visualizationImage,
+  imageGridDimensions
 }: AttentionHeadsProps) {
   // Attention head focussed state
   const { focused, onClick, onMouseEnter, onMouseLeave } = useHoverLock(0);
+  // Add state for selected token in the zoomed view
+  const [selectedToken, setSelectedToken] = React.useState(0);
 
   const headNames =
     attentionHeadNames || attention.map((_, idx) => `Head ${idx}`);
@@ -145,9 +150,35 @@ export function AttentionHeads({
       />
 
       <Row>
-        <Col xs={12}>
+        <Col xs={6}>
+          <h3 style={{ marginBottom: 10 }}>
+            {`Attention for Destination token idx=${selectedToken}: "${tokens[selectedToken]}"`}
+          </h3>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#f5f5f5",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            {visualizationImage && (
+              <ImageAttentionPattern
+                image={visualizationImage}
+                attention={attention[focused]}
+                gridDimensions={imageGridDimensions}
+                selectedToken={selectedToken}
+                maxValue={maxValue}
+                minValue={minValue}
+              />
+            )}
+          </div>
+        </Col>
+        <Col xs={6}>
           <h3 style={{ marginBottom: 10 }}>{headNames[focused]} Zoomed</h3>
-          <div>
+          <div style={{ position: "relative" }}>
             <h2
               style={{
                 position: "absolute",
@@ -162,16 +193,19 @@ export function AttentionHeads({
             >
               {headNames[focused]}
             </h2>
-            <AttentionPattern
-              attention={attention[focused]}
-              maxValue={maxValue}
-              minValue={minValue}
-              negativeColor={negativeColor}
-              positiveColor={positiveColor}
-              zoomed={true}
-              maskUpperTri={maskUpperTri}
-              tokens={tokens}
-            />
+            <div>
+              <AttentionPattern
+                attention={attention[focused]}
+                maxValue={maxValue}
+                minValue={minValue}
+                negativeColor={negativeColor}
+                positiveColor={positiveColor}
+                zoomed={true}
+                maskUpperTri={maskUpperTri}
+                tokens={tokens}
+                onTokenClick={setSelectedToken}
+              />
+            </div>
           </div>
         </Col>
       </Row>
@@ -268,4 +302,20 @@ export interface AttentionHeadsProps {
    * Must be the same length as the list of values.
    */
   tokens: string[];
+
+  /**
+   * URL or base64 string for the visualization image
+   * Can be a remote URL, local asset path, or base64 encoded image
+   *
+   * @example "https://example.com/image.jpg"
+   * @example "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+   */
+  visualizationImage?: string;
+
+  /**
+   * Grid dimensions for the image visualization [rows, cols]
+   * Only the first rows×cols tokens will be used for the image visualization
+   * @example [4, 4] for a 4×4 grid
+   */
+  imageGridDimensions?: [number, number];
 }

@@ -14,7 +14,9 @@ def attention_heads(
     min_value: Optional[float] = None,
     negative_color: Optional[str] = None,
     positive_color: Optional[str] = None,
-    mask_upper_tri: Optional[bool] = None,
+    mask_upper_tri: Optional[bool] = False,
+    image: Optional[str] = None,
+    image_grid_dims: Optional[tuple[int, int]] = None,
 ) -> RenderedHTML:
     """Attention Heads
 
@@ -54,6 +56,8 @@ def attention_heads(
         "positiveColor": positive_color,
         "tokens": tokens,
         "maskUpperTri": mask_upper_tri,
+        "visualizationImage": image,
+        "imageGridDimensions": image_grid_dims,
     }
 
     return render(
