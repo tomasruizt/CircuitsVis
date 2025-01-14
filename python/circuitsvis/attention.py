@@ -9,14 +9,14 @@ from circuitsvis.utils.render import RenderedHTML, render
 def attention_heads(
     attention: Union[list, np.ndarray, torch.Tensor],
     tokens: List[str],
+    max_value: Optional[float],
+    min_value: Optional[float],
+    image: Optional[str],
+    image_grid_dims: Optional[tuple[int, int]],
     attention_head_names: Optional[List[str]] = None,
-    max_value: Optional[float] = None,
-    min_value: Optional[float] = None,
     negative_color: Optional[str] = None,
     positive_color: Optional[str] = None,
     mask_upper_tri: Optional[bool] = False,
-    image: Optional[str] = None,
-    image_grid_dims: Optional[tuple[int, int]] = None,
 ) -> RenderedHTML:
     """Attention Heads
 
@@ -30,6 +30,8 @@ def attention_heads(
         src_tokens]
         tokens: List of tokens (e.g. `["A", "person"]`). Must be the same length
         as the list of values.
+        image: Image to display.
+        image_grid_dims: Dimensions of the image grid.
         max_value: Maximum value. Used to determine how dark the token color is
         when positive (i.e. based on how close it is to the maximum value).
         min_value: Minimum value. Used to determine how dark the token color is

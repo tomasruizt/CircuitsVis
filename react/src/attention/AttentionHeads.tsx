@@ -171,6 +171,13 @@ export function AttentionHeads({
         imageGridDimensions={imageGridDimensions}
       />
 
+      <p style={{ marginBottom: 20, textAlign: "center" }}>
+        Click any element in either grid below to select the
+        &quot;destination&quot; token for attention. The image grid shows image
+        &quot;source&quot; tokens, while the text grid shows text
+        &quot;source&quot; tokens.
+      </p>
+
       <Row>
         <Col xs={6}>
           <h3 style={{ marginBottom: 10 }}>
