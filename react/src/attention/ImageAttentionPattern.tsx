@@ -108,22 +108,6 @@ export function ImageAttentionPattern({
                 opacity
               }}
             />
-            <div
-              style={{
-                position: "absolute",
-                top: "5px",
-                left: "5px",
-                background: "rgba(0, 0, 0, 0.7)",
-                color: "white",
-                padding: "2px 6px",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: "bold",
-                zIndex: 1
-              }}
-            >
-              {idx}
-            </div>
           </div>
         );
       })}

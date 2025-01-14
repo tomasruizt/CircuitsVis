@@ -36,13 +36,24 @@ export function AttentionHeadsSelector({
   onMouseLeave,
   positiveColor,
   maskUpperTri,
-  tokens
+  tokens,
+  imageGridDimensions
 }: AttentionHeadsProps & {
   attentionHeadNames: string[];
 } & UseHoverLockState) {
+  // Calculate the number of image tokens to skip
+  const [rows, cols] = imageGridDimensions || [0, 0];
+  const imageTokenCount = rows * cols;
+
+  // Get only text tokens and their attention patterns
+  const textTokens = tokens.slice(imageTokenCount);
+  const textAttention = attention.map((head) =>
+    head.slice(imageTokenCount).map((row) => row.slice(imageTokenCount))
+  );
+
   return (
     <Row style={{ marginBottom: 15 }}>
-      {attention.map((headAttention, idx) => {
+      {textAttention.map((headAttention, idx) => {
         const isFocused = focused === idx;
 
         return (
@@ -85,7 +96,7 @@ export function AttentionHeadsSelector({
 
                 <AttentionPattern
                   attention={headAttention}
-                  tokens={tokens}
+                  tokens={textTokens}
                   showAxisLabels={false}
                   maxValue={maxValue}
                   minValue={minValue}
@@ -118,12 +129,22 @@ export function AttentionHeads({
   maskUpperTri = true,
   tokens,
   visualizationImage,
-  imageGridDimensions
+  imageGridDimensions = [0, 0]
 }: AttentionHeadsProps) {
   // Attention head focussed state
   const { focused, onClick, onMouseEnter, onMouseLeave } = useHoverLock(0);
   // Add state for selected token in the zoomed view
   const [selectedToken, setSelectedToken] = React.useState(0);
+
+  // Calculate the number of image tokens to skip
+  const [rows, cols] = imageGridDimensions;
+  const imageTokenCount = rows * cols;
+
+  // Get only text tokens and their attention patterns
+  const textTokens = tokens.slice(imageTokenCount);
+  const textAttention = attention.map((head) =>
+    head.slice(imageTokenCount).map((row) => row.slice(imageTokenCount))
+  );
 
   const headNames =
     attentionHeadNames || attention.map((_, idx) => `Head ${idx}`);
@@ -147,6 +168,7 @@ export function AttentionHeads({
         positiveColor={positiveColor}
         maskUpperTri={maskUpperTri}
         tokens={tokens}
+        imageGridDimensions={imageGridDimensions}
       />
 
       <Row>
@@ -195,15 +217,15 @@ export function AttentionHeads({
             </h2>
             <div>
               <AttentionPattern
-                attention={attention[focused]}
+                attention={textAttention[focused]}
                 maxValue={maxValue}
                 minValue={minValue}
                 negativeColor={negativeColor}
                 positiveColor={positiveColor}
                 zoomed={true}
                 maskUpperTri={maskUpperTri}
-                tokens={tokens}
-                onTokenClick={setSelectedToken}
+                tokens={textTokens}
+                onTokenClick={(idx) => setSelectedToken(idx + imageTokenCount)}
               />
             </div>
           </div>
