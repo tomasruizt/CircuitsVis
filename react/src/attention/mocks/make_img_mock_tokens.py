@@ -2,7 +2,8 @@ import json
 
 import numpy as np
 
-n_img_tokens = 2 * 3
+img_grid_dimensions = [6, 6]
+n_img_tokens = img_grid_dimensions[0] * img_grid_dimensions[1]
 img_token = "<image>"
 tokens = [img_token] * n_img_tokens + [
   " What",
@@ -31,12 +32,17 @@ n_heads = 6
 attns_masks = [make_attn_mask(i).round(3).tolist() for i in range(n_heads)]
 
 
+print("grid dimensions:", img_grid_dimensions)
 print("num tokens:", n_tokens)
 print("num img tokens:", n_img_tokens)
 print("num heads:", n_heads)
 
-with open("mock_tokens.json", "w") as f:
-    json.dump(tokens, f, indent=2)
 
-with open("mock_attn_mask.json", "w") as f:
-    json.dump(attns_masks, f, indent=2)
+data = {
+    "tokens": tokens,
+    "attention": attns_masks,
+    "image_grid_dimensions": img_grid_dimensions
+}
+
+with open("img_mock_data.json", "w") as f:
+    json.dump(data, f, indent=2)

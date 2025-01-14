@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
 
 import { AttentionHeads } from "./AttentionHeads";
-import { mockImageAttention, mockImageTokens } from "./mocks/attention";
+import { mockImageData } from "./mocks/attention";
 
 export default {
   component: AttentionHeads,
@@ -23,12 +23,12 @@ const Template: ComponentStory<typeof AttentionHeads> = (args) => (
 export const InductionHeadsLayer: ComponentStory<typeof AttentionHeads> =
   Template.bind({});
 InductionHeadsLayer.args = {
-  tokens: mockImageTokens,
-  attention: mockImageAttention,
+  tokens: mockImageData.tokens,
+  attention: mockImageData.attention,
   visualizationImage:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Huskiesatrest.jpg/2560px-Huskiesatrest.jpg",
-  imageGridDimensions: [2, 3],
+  imageGridDimensions: mockImageData.image_grid_dimensions,
   minValue: 0,
-  maxValue: 1,
+  maxValue: 0.1,
   maskUpperTri: false
 };
