@@ -148,8 +148,8 @@ export function AttentionHeads({
 }: AttentionHeadsProps) {
   // Attention head focussed state
   const { focused, onClick, onMouseEnter, onMouseLeave } = useHoverLock(0);
-  // Add state for selected token in the zoomed view
-  const [selectedToken, setSelectedToken] = React.useState(0);
+  // Initialize with the last token index
+  const [selectedToken, setSelectedToken] = React.useState(tokens.length - 1);
 
   // Calculate image token range
   const [rows, cols] = imageGridDimensions;
