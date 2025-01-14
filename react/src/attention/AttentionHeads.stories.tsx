@@ -28,7 +28,7 @@ InductionHeadsLayer.args = {
   visualizationImage:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Huskiesatrest.jpg/2560px-Huskiesatrest.jpg",
   imageGridDimensions: mockImageData.image_grid_dimensions,
-  minValue: 0,
-  maxValue: 0.1,
+  minValue: mockImageData.attention_min,
+  maxValue: mockImageData.attention_max,
   maskUpperTri: false
 };

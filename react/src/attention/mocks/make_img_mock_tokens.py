@@ -2,7 +2,7 @@ import json
 
 import numpy as np
 
-img_grid_dimensions = [6, 6]
+img_grid_dimensions = [12, 12]
 n_img_tokens = img_grid_dimensions[0] * img_grid_dimensions[1]
 img_token = "<image>"
 tokens = [img_token] * n_img_tokens + [
@@ -41,7 +41,9 @@ print("num heads:", n_heads)
 data = {
     "tokens": tokens,
     "attention": attns_masks,
-    "image_grid_dimensions": img_grid_dimensions
+    "attention_min": np.min(attns_masks),
+    "attention_max": np.max(attns_masks),
+    "image_grid_dimensions": img_grid_dimensions,
 }
 
 with open("img_mock_data.json", "w") as f:
