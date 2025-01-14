@@ -19,3 +19,6 @@ yarn-error.log
 .parcel-cache/
 storybook-static/
 build-storybook.log
+
+# Generated mocks
+react/src/attention/mocks/img_mock_data.json

@@ -25,8 +25,7 @@ export const InductionHeadsLayer: ComponentStory<typeof AttentionHeads> =
 InductionHeadsLayer.args = {
   tokens: mockImageData.tokens,
   attention: mockImageData.attention,
-  visualizationImage:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Huskiesatrest.jpg/2560px-Huskiesatrest.jpg",
+  visualizationImage: mockImageData.img_url,
   imageGridDimensions: mockImageData.image_grid_dimensions,
   minValue: mockImageData.attention_min,
   maxValue: mockImageData.attention_max,

@@ -2,7 +2,7 @@ import json
 
 import numpy as np
 
-img_grid_dimensions = [12, 12]
+img_grid_dimensions = (24, 24)  # CLIP grid size
 n_img_tokens = img_grid_dimensions[0] * img_grid_dimensions[1]
 img_token = "<image>"
 tokens = [img_token] * n_img_tokens + [
@@ -44,6 +44,7 @@ data = {
     "attention_min": np.min(attns_masks),
     "attention_max": np.max(attns_masks),
     "image_grid_dimensions": img_grid_dimensions,
+    "img_url": "https://github.com/zazamrykh/PicFinder/blob/main/images/doge.jpg?raw=true",
 }
 
 with open("img_mock_data.json", "w") as f:
