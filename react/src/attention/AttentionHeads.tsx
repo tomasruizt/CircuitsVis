@@ -194,6 +194,7 @@ export function AttentionHeads({
                 selectedToken={selectedToken}
                 maxValue={maxValue}
                 minValue={minValue}
+                onTokenClick={setSelectedToken}
               />
             )}
           </div>

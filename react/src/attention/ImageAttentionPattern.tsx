@@ -32,6 +32,11 @@ interface ImageAttentionPatternProps {
    * @default 0
    */
   minValue?: number;
+
+  /**
+   * Callback when a grid element is clicked
+   */
+  onTokenClick?: (tokenIdx: number) => void;
 }
 
 export function ImageAttentionPattern({
@@ -40,7 +45,8 @@ export function ImageAttentionPattern({
   gridDimensions,
   selectedToken,
   maxValue = 1,
-  minValue = 0
+  minValue = 0,
+  onTokenClick
 }: ImageAttentionPatternProps) {
   const [rows, cols] = gridDimensions;
   const [imageAspectRatio, setImageAspectRatio] = React.useState(1);
@@ -82,8 +88,10 @@ export function ImageAttentionPattern({
               top: `${(row / rows) * 100}%`,
               left: `${(col / cols) * 100}%`,
               width: `${100 / cols}%`,
-              height: `${100 / rows}%`
+              height: `${100 / rows}%`,
+              cursor: onTokenClick ? "pointer" : "default"
             }}
+            onClick={() => onTokenClick?.(idx)}
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               setHoveredValue({
