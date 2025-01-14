@@ -27,7 +27,8 @@ InductionHeadsLayer.args = {
   attention: mockImageData.attention,
   visualizationImage: mockImageData.img_url,
   imageGridDimensions: mockImageData.image_grid_dimensions,
+  imageTokensStart: mockImageData.image_tokens_start,
   minValue: mockImageData.attention_min,
-  maxValue: mockImageData.attention_max,
+  maxValue: mockImageData.attention_max / 100,
   maskUpperTri: false
 };

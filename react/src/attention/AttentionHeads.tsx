@@ -37,19 +37,33 @@ export function AttentionHeadsSelector({
   positiveColor,
   maskUpperTri,
   tokens,
-  imageGridDimensions
+  imageGridDimensions,
+  imageTokensStart = 0
 }: AttentionHeadsProps & {
   attentionHeadNames: string[];
 } & UseHoverLockState) {
-  // Calculate the number of image tokens to skip
+  // Calculate image token range
   const [rows, cols] = imageGridDimensions || [0, 0];
   const imageTokenCount = rows * cols;
+  const imageTokensEnd = imageTokensStart + imageTokenCount;
 
-  // Get only text tokens and their attention patterns
-  const textTokens = tokens.slice(imageTokenCount);
-  const textAttention = attention.map((head) =>
-    head.slice(imageTokenCount).map((row) => row.slice(imageTokenCount))
-  );
+  // Get text tokens by excluding the image token range
+  const textTokens = [
+    ...tokens.slice(0, imageTokensStart),
+    ...tokens.slice(imageTokensEnd)
+  ];
+
+  // Update attention patterns to exclude image tokens
+  const textAttention = attention.map((head) => {
+    const destWithoutImage = [
+      ...head.slice(0, imageTokensStart),
+      ...head.slice(imageTokensEnd)
+    ];
+    return destWithoutImage.map((row) => [
+      ...row.slice(0, imageTokensStart),
+      ...row.slice(imageTokensEnd)
+    ]);
+  });
 
   return (
     <Row style={{ marginBottom: 15 }}>
@@ -129,25 +143,45 @@ export function AttentionHeads({
   maskUpperTri = true,
   tokens,
   visualizationImage,
-  imageGridDimensions = [0, 0]
+  imageGridDimensions = [0, 0],
+  imageTokensStart = 0
 }: AttentionHeadsProps) {
   // Attention head focussed state
   const { focused, onClick, onMouseEnter, onMouseLeave } = useHoverLock(0);
   // Add state for selected token in the zoomed view
   const [selectedToken, setSelectedToken] = React.useState(0);
 
-  // Calculate the number of image tokens to skip
+  // Calculate image token range
   const [rows, cols] = imageGridDimensions;
   const imageTokenCount = rows * cols;
+  const imageTokensEnd = imageTokensStart + imageTokenCount;
 
-  // Get only text tokens and their attention patterns
-  const textTokens = tokens.slice(imageTokenCount);
-  const textAttention = attention.map((head) =>
-    head.slice(imageTokenCount).map((row) => row.slice(imageTokenCount))
-  );
+  // Get text tokens by excluding the image token range
+  const textTokens = [
+    ...tokens.slice(0, imageTokensStart),
+    ...tokens.slice(imageTokensEnd)
+  ];
+
+  // Update attention patterns to exclude image tokens
+  const textAttention = attention.map((head) => {
+    const destWithoutImage = [
+      ...head.slice(0, imageTokensStart),
+      ...head.slice(imageTokensEnd)
+    ];
+    return destWithoutImage.map((row) => [
+      ...row.slice(0, imageTokensStart),
+      ...row.slice(imageTokensEnd)
+    ]);
+  });
 
   const headNames =
     attentionHeadNames || attention.map((_, idx) => `Head ${idx}`);
+
+  // Update the token click handler to account for the image token offset
+  const handleTextTokenClick = (idx: number) => {
+    const actualIdx = idx >= imageTokensStart ? idx + imageTokenCount : idx;
+    setSelectedToken(actualIdx);
+  };
 
   return (
     <Container>
@@ -169,6 +203,7 @@ export function AttentionHeads({
         maskUpperTri={maskUpperTri}
         tokens={tokens}
         imageGridDimensions={imageGridDimensions}
+        imageTokensStart={imageTokensStart}
       />
 
       <p style={{ marginBottom: 20, textAlign: "center" }}>
@@ -202,6 +237,7 @@ export function AttentionHeads({
                 maxValue={maxValue}
                 minValue={minValue}
                 onTokenClick={setSelectedToken}
+                imageTokensStart={imageTokensStart}
               />
             )}
           </div>
@@ -233,7 +269,7 @@ export function AttentionHeads({
                 zoomed={true}
                 maskUpperTri={maskUpperTri}
                 tokens={textTokens}
-                onTokenClick={(idx) => setSelectedToken(idx + imageTokenCount)}
+                onTokenClick={handleTextTokenClick}
               />
             </div>
           </div>
@@ -348,4 +384,10 @@ export interface AttentionHeadsProps {
    * @example [4, 4] for a 4×4 grid
    */
   imageGridDimensions?: [number, number];
+
+  /**
+   * Starting index of the contiguous image tokens in the sequence
+   * @default 0
+   */
+  imageTokensStart?: number;
 }

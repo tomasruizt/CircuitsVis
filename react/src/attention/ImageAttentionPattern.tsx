@@ -34,6 +34,12 @@ interface ImageAttentionPatternProps {
   minValue?: number;
 
   /**
+   * Starting index of image tokens in the sequence
+   * @default 0
+   */
+  imageTokensStart?: number;
+
+  /**
    * Callback when a grid element is clicked
    */
   onTokenClick?: (tokenIdx: number) => void;
@@ -46,6 +52,7 @@ export function ImageAttentionPattern({
   selectedToken,
   maxValue = 1,
   minValue = 0,
+  imageTokensStart = 0,
   onTokenClick
 }: ImageAttentionPatternProps) {
   const [rows, cols] = gridDimensions;
@@ -77,7 +84,8 @@ export function ImageAttentionPattern({
       {Array.from({ length: rows * cols }).map((_, idx) => {
         const row = Math.floor(idx / cols);
         const col = idx % cols;
-        const attentionValue = attention[selectedToken][idx];
+        const actualIdx = idx + imageTokensStart; // Adjust index for image token position
+        const attentionValue = attention[selectedToken][actualIdx];
         const opacity = (attentionValue - minValue) / (maxValue - minValue);
 
         return (
@@ -91,14 +99,14 @@ export function ImageAttentionPattern({
               height: `${100 / rows}%`,
               cursor: onTokenClick ? "pointer" : "default"
             }}
-            onClick={() => onTokenClick?.(idx)}
+            onClick={() => onTokenClick?.(actualIdx)} // Pass adjusted index
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               setHoveredValue({
                 value: attentionValue,
                 x: rect.left + rect.width / 2,
                 y: rect.top,
-                destIdx: idx
+                destIdx: actualIdx // Use adjusted index
               });
             }}
             onMouseLeave={() => setHoveredValue(null)}
