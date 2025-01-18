@@ -1,7 +1,7 @@
 """Helper functions to build visualizations using HTML/web frameworks."""
+import os
 import shutil
 import subprocess
-import os
 from pathlib import Path
 from urllib import request
 from uuid import uuid4
@@ -81,6 +81,8 @@ class RenderedHTML:
         Returns:
             str: HTML source code (with JavaScript from CDN)
         """
+        if is_in_dev_mode():
+            return self.local_src
         return self.cdn_src
 
 
