@@ -30,44 +30,20 @@ export function AttentionHeadsSelector({
   focused,
   maxValue,
   minValue,
-  negativeColor,
   onClick,
   onMouseEnter,
   onMouseLeave,
-  positiveColor,
-  maskUpperTri,
-  tokens,
   imageGridDimensions,
-  imageTokensStart = 0
+  imageTokensStart = 0,
+  visualizationImage,
+  selectedToken
 }: AttentionHeadsProps & {
   attentionHeadNames: string[];
+  selectedToken: number;
 } & UseHoverLockState) {
-  // Calculate image token range
-  const [rows, cols] = imageGridDimensions || [0, 0];
-  const imageTokenCount = rows * cols;
-  const imageTokensEnd = imageTokensStart + imageTokenCount;
-
-  // Get text tokens by excluding the image token range
-  const textTokens = [
-    ...tokens.slice(0, imageTokensStart),
-    ...tokens.slice(imageTokensEnd)
-  ];
-
-  // Update attention patterns to exclude image tokens
-  const textAttention = attention.map((head) => {
-    const destWithoutImage = [
-      ...head.slice(0, imageTokensStart),
-      ...head.slice(imageTokensEnd)
-    ];
-    return destWithoutImage.map((row) => [
-      ...row.slice(0, imageTokensStart),
-      ...row.slice(imageTokensEnd)
-    ]);
-  });
-
   return (
     <Row style={{ marginBottom: 15 }}>
-      {textAttention.map((headAttention, idx) => {
+      {attention.map((headAttention, idx) => {
         const isFocused = focused === idx;
 
         return (
@@ -108,16 +84,17 @@ export function AttentionHeadsSelector({
                   {attentionHeadNames[idx]}
                 </h4>
 
-                <AttentionPattern
-                  attention={headAttention}
-                  tokens={textTokens}
-                  showAxisLabels={false}
-                  maxValue={maxValue}
-                  minValue={minValue}
-                  negativeColor={negativeColor}
-                  positiveColor={positiveColor}
-                  maskUpperTri={maskUpperTri}
-                />
+                {visualizationImage && (
+                  <ImageAttentionPattern
+                    image={visualizationImage}
+                    attention={headAttention}
+                    gridDimensions={imageGridDimensions}
+                    selectedToken={selectedToken}
+                    maxValue={maxValue}
+                    minValue={minValue}
+                    imageTokensStart={imageTokensStart}
+                  />
+                )}
               </div>
             </div>
           </Col>
@@ -204,6 +181,8 @@ export function AttentionHeads({
         tokens={tokens}
         imageGridDimensions={imageGridDimensions}
         imageTokensStart={imageTokensStart}
+        visualizationImage={visualizationImage}
+        selectedToken={selectedToken}
       />
 
       <p style={{ marginBottom: 20, textAlign: "center" }}>
