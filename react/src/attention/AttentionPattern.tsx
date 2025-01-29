@@ -140,7 +140,7 @@ export function AttentionPattern({
               `(${block.destIdx}, ${block.srcIdx})`,
               `Src: ${block.srcToken}`,
               `Dest: ${block.destToken} `,
-              `Val: ${block.v}`
+              `Val: ${parseFloat(block.v.toFixed(5))}`
             ];
           }
         }

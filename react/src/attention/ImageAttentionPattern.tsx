@@ -146,7 +146,9 @@ export function ImageAttentionPattern({
         >
           {`Src: ${
             hoveredValue.destIdx
-          }\nDest: ${selectedToken}\nVal: ${hoveredValue.value.toFixed(3)}`}
+          }\nDest: ${selectedToken}\nVal: ${parseFloat(
+            hoveredValue.value.toFixed(5)
+          )}`}
         </div>
       )}
     </div>
