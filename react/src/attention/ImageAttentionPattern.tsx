@@ -86,7 +86,8 @@ export function ImageAttentionPattern({
         const col = idx % cols;
         const actualIdx = idx + imageTokensStart; // Adjust index for image token position
         const attentionValue = attention[selectedToken][actualIdx];
-        const opacity = (attentionValue - minValue) / (maxValue - minValue);
+        const opacity =
+          0.15 + 0.85 * ((attentionValue - minValue) / (maxValue - minValue));
 
         return (
           <div
